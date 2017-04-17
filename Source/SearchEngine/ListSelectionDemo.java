@@ -1,4 +1,4 @@
-package com; 
+package hackathon; 
 
 import java.awt.BorderLayout; 
 import java.awt.Color; 
@@ -11,14 +11,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener; 
 import java.awt.event.KeyEvent; 
 import java.awt.event.WindowAdapter; 
-import java.awt.event.WindowEvent; 
+import java.awt.event.WindowEvent;
+import java.awt.font.TextAttribute;
 import java.awt.print.PageFormat; 
 import java.awt.print.PrinterException; 
 import java.io.BufferedReader; 
 import java.io.File; 
 import java.io.FileReader; 
 import java.io.FileWriter; 
-import java.io.PrintWriter; 
+import java.io.PrintWriter;
+import java.text.AttributedString;
 import java.text.MessageFormat; 
 
 import javax.swing.BorderFactory; 
@@ -50,8 +52,10 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.undo.CannotRedoException; 
 import javax.swing.undo.UndoManager; 
 
-import com.sun.java_cup.internal.runtime.*; 
-import com.sun.*;
+import com.sun.java_cup.internal.runtime.Scanner; 
+import com.sun.xml.internal.fastinfoset.sax.Properties; 
+
+
 
 public class ListSelectionDemo extends JPanel 
 { 
@@ -64,7 +68,9 @@ JList list;
 ListSelectionModel listSelectionModel; 
 JButton b; 
 JLabel l; 
+JLabel best;
 JTextField f; 
+JTextArea paper;
 File file; 
 File[] listData; 
 JSplitPane splitPane; 
@@ -133,11 +139,15 @@ menuBar.add(edit);
 frame.setJMenuBar(menuBar); 
 final JPanel controlPane = new JPanel(); 
 l=new JLabel("SEARCH"); 
-f=new JTextField(7); 
+best = new JLabel();
+f=new JTextField(25); 
 b=new JButton("GO"); 
 controlPane.add(l); 
 controlPane.add(f); 
 controlPane.add(b); 
+controlPane.add(best);
+
+paper = new JTextArea(5, 20);
 
 output = new JTextArea(1, 10); 
 output.setEditable(true); 
@@ -155,11 +165,14 @@ output.setBackground(Color.LIGHT_GRAY);
 output.setForeground(Color.BLACK); 
 
 //Bottom Panel 
-JScrollPane listPane = new JScrollPane(); 
+JScrollPane listPane = new JScrollPane();
+
 JPanel listContainer = new JPanel(new GridLayout(1,1)); 
 listContainer.setBorder(BorderFactory.createTitledBorder("List")); 
 
 listContainer.add(listPane); 
+
+
 
 //Left Panel 
 
@@ -191,77 +204,67 @@ b.addActionListener(new ActionListener()
 { 
 public void actionPerformed(ActionEvent e) 
 { 
+
 String s=b.getActionCommand(); 
 if(s.equals("search")) 
 { 
+	
+	
 String tf=f.getText(); 
 System.out.println(tf); 
 if(tf.equals("")) 
 { 
-output.setText(""); 
-output.setEditable(false); 
+output.setText("please enter the query"); 
 
-JPanel listContainer = new JPanel(new GridLayout(1,1)); 
-listContainer.setBorder(BorderFactory.createTitledBorder("RESULT")); 
-listContainer.add(new JLabel("PATH NOT FOUND")); 
-
-splitPane.setBottomComponent(listContainer); 
+ 
 } 
-else 
+else if (tf.equals("maths"))
 { 
-file = new File(tf); 
-listData = file.listFiles(); 
-list = new JList(listData); 
+	output.setText("Search Results : \n");
+	output.append("\n");
+	output.append("The number of cusps of complete Riemannian manifolds with finite volume \n");
+	output.append("\n");
+	output.append("Torsion of locally convex curves \n");
+	output.append("\n");
+	
+	output.append("Geometric approach to 1-singular Gelfand-Tsetlin gln-modules \n");	
+      output.append("\n");
+	output.append("Metric contraction of the cone divisor by the conical Kähler-Ricci flow\n");	
+    output.append("\n");
+	output.append("A sharp lower bounds of eigenvalues for differential forms and homology sphere theorems \n");
+	
+    output.append("\n");
+	output.append("On the geometry of almost Golden Riemannian manifolds \n");
+	
+    output.append("\n");
+	output.append("Hamiltonian properties of earthquakes flows on surfaces with closed geodesic boundary \n");
+	
+	   output.append("\n");
+		output.append("Upper bounds for the spectral function on homogeneous spaces via volume growth \n");
+		
+		 output.append("\n");
+	output.append("Structure of locally conformally symplectic Lie algebras and solvmanifolds \n");
+			
+	 output.append("\n");
+output.append("Nonlinear geometric analysis on Finsler manifolds \n");
+				
 
-listSelectionModel = list.getSelectionModel(); 
-listSelectionModel.addListSelectionListener(new SharedListSelectionHandler()); 
-JScrollPane listPane1 = new JScrollPane(list); 
-
-JPanel listContainer1 = new JPanel(new GridLayout(1,1)); 
-listContainer1.setBackground(Color.LIGHT_GRAY); 
-listContainer1.setBorder(BorderFactory.createTitledBorder("List")); 
-listContainer1.add(listPane1); 
-output.setEditable(true); 
-splitPane.setBottomComponent(listContainer1); 
-
-} 
-
-} 
-} 
-} 
-); 
-
-String[] modes = { "Option-1", 
-"Option-2", 
-"Option-3" }; 
-
-final JComboBox comboBox = new JComboBox(modes); 
-comboBox.setSelectedIndex(2); 
-comboBox.addActionListener(new ActionListener() 
-{ 
-public void actionPerformed(ActionEvent e) 
-{ 
-String newMode = (String)comboBox.getSelectedItem(); 
-if (newMode.equals("Option-1")) 
-{ 
 
 } 
-else if (newMode.equals("Option-2")) 
-{ 
 
+else
+{
+	output.setText("No results Found");
+}
 } 
-else 
-{ 
+} 
+} 
+);
+}
 
-} 
-output.append("----------"+ "Mode: " + newMode + "----------" + newline); 
-} 
-} 
-); 
 
-controlPane.add(new JLabel("Selection mode:")); 
-controlPane.add(comboBox); 
-} 
+
+
 
 
 private static void createAndShowGUI() 
@@ -310,7 +313,6 @@ public void run()
 { 
 createAndShowGUI(); 
 } 
-ListSelectionDemo d=new ListSelectionDemo();
 } 
 ); 
 } 
@@ -513,5 +515,4 @@ System.out.println(e1);
 } 
 } 
 } 
-}
-
+} 
